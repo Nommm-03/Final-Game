@@ -5,7 +5,7 @@ Enigmatic Escape: Jaxon's Journey
 Dalam "Enigmatic Escape: Jaxon's Journey", pemain mengikuti petualangan Jaxon yang terjebak di dalam mansion misterius. Untuk melarikan diri, Jaxon harus menyelesaikan teka-teki di setiap ruangan dan menghadapi penghuni misterius mansion tersebut. Dengan grafis yang menakjubkan dan teka-teki yang menantang, pemain diuji untuk membantu Jaxon mencari jalan keluar dari mansion tersebut.
 
 # Library
-Library : .....
+Library : - Pygame
 
 # Cara menjalankan App
 .....
