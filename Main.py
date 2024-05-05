@@ -19,6 +19,9 @@ class Game:
         self.blocks = pygame.sprite.LayeredUpdates()
         self.enemies = pygame.sprite.LayeredUpdates()
         self.attacks = pygame.sprite.LayeredUpdates()
+        bg_music_path = os.path.join(os.path.dirname(__file__), 'class room', 'Factory.ogg')
+        pygame.mixer.music.load(bg_music_path)
+        pygame.mixer.music.play(-1)
 
         self.player = Player(self, 1, 6)
 
@@ -34,7 +37,10 @@ class Game:
         self.all_sprites.update()
 
     def draw(self):
-        self.screen.fill(BLACK)
+         # Load background image
+        bg_path = os.path.join(os.path.dirname(__file__), 'class room', 'start.png')
+        background_image = pygame.image.load(bg_path).convert()
+        self.screen.blit(background_image, (0, 0))
         self.all_sprites.draw(self.screen)
         self.clock.tick(FPS)
         pygame.display.update()
