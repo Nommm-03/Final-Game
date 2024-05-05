@@ -11,7 +11,8 @@ Library : - Pygame
 .....
 
 # UML
-![UML CLASS DIAGRAM](https://github.com/Nommm-03/Tugas-Besar-PBO/assets/167625310/400ff147-1c73-419d-9b25-5d6e52af4490)
+![UML CLASS DIAGRAM (2)](https://github.com/Nommm-03/Tugas-Besar-PBO/assets/167625310/4cfc8307-44c4-492d-9a76-ec691698c941)
+
 
 # Kontributor
 - Ramon Riping (122140078)
