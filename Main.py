@@ -1,8 +1,8 @@
 import pygame
-from sprites import *
+from Player import *
+from Level import *
 from config import *
 import sys
-import os
 
 class Game:
     def __init__(self):
@@ -10,55 +10,130 @@ class Game:
         self.screen = pygame.display.set_mode((WIN_WIDTH,WIN_HEIGHT))
         self.caption = pygame.display.set_caption('Enigma Escape')
         self.clock = pygame.time.Clock()
+        self.title_font = pygame.font.Font('Font/joystix monospace.otf', 40)
+        self.background = pygame.Surface((WIN_WIDTH,WIN_HEIGHT))
+        self.background.fill(BLACK)
+        self.level = 1
+        self.player = Player(self, 1, 19)
+        
+        self.level1 = Level1(self)
+
         self.running = True
+
+        self.mouse_pos = pygame.mouse.get_pos()
+        self.mouse_pressed = pygame.mouse.get_pressed()
 
     def new(self):
         # a new game starts
         self.playing = True
 
-        self.all_sprites = pygame.sprite.LayeredUpdates()
-        self.blocks = pygame.sprite.LayeredUpdates()
-        self.enemies = pygame.sprite.LayeredUpdates()
-        self.attacks = pygame.sprite.LayeredUpdates()
-        bg_music_path = os.path.join(os.path.dirname(__file__), 'class room', 'Factory.ogg')
-        pygame.mixer.music.load(bg_music_path)
-        pygame.mixer.music.play(-1)
-
-        self.player = Player(self, 1, 6)
-
-    def events(self):  
-        # game loop events
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.playing = False
-                self.running = False
-
-    def update(self):
-        # game loop updates
-        self.all_sprites.update()
-
-    def draw(self):
-         # Load background image
-        bg_path = os.path.join(os.path.dirname(__file__), 'class room', 'start.png')
-        background_image = pygame.image.load(bg_path).convert()
-        self.screen.blit(background_image, (0, 0))
-        self.all_sprites.draw(self.screen)
-        self.clock.tick(FPS)
-        pygame.display.update()
-
     def main(self):
-        #game loop
+        #game loop 
+
         while self.playing:
-            self.events()
-            self.update()
-            self.draw()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.playing = False
+                    self.running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    print(self.mouse_pos)
+                
+            self.screen.blit(self.background,(0,0))
+            
+            if self.level == 1:
+                game_background = pygame.image.load('Level/lv1.png')
+                self.screen.blit(game_background,(200,0))
+                self.level1.movement()
+
+            self.screen.blit(self.player.image, self.player.rect)
+            self.player.movement()
+            self.player.update()
+            self.clock.tick(FPS)
+            pygame.display.update()
         self.running = False
 
     def game_over(self):
         pass
 
     def intro_screen(self):
-        pass
+        self.intro = True
+
+        title1 = self.title_font.render('Enigma Escape', True, WHITE)
+        title1_rect = title1.get_rect(x=420,y=60)
+        title2 = self.title_font.render('Jaxon Journey', True, WHITE)
+        title2_rect = title2.get_rect(x=415,y=115)
+        intro_background = pygame.image.load('start.png')
+
+        play_button = Button(830, 310, 100, 50, WHITE, BLACK, 'Play', 32)
+
+        quit_button = Button(340, 310, 100, 50, WHITE, BLACK, 'Quit', 32)
+
+        while self.intro:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN: 
+                    # QUIT BUTTON
+                    if event.key == pygame.K_RETURN and (self.player.rect.x >= 249 and self.player.rect.x <= 523):  # Ketika tombol "Enter" ditekan
+                        self.intro = False
+                        self.running = False
+                        pygame.quit()
+                        sys.exit()
+
+                    # START BUTTON
+                    if event.key == pygame.K_RETURN and (self.player.rect.x >= 746 and self.player.rect.x <= 1011):  # Ketika tombol "Enter" ditekan
+                        self.intro = False
+
+            self.screen.blit(intro_background, (0,0))
+            self.screen.blit(title1, title1_rect)
+            self.screen.blit(title2, title2_rect)
+            self.screen.blit(play_button.image, play_button.rect)
+            self.screen.blit(quit_button.image, quit_button.rect)
+            self.screen.blit(self.player.image, self.player.rect)
+
+            # Movement Player
+            self.player.movement()
+            self.player.update()
+            if self.player.rect.right >= 1250:
+                self.player.rect.right = 1250
+            if self.player.rect.left <= 0:
+                self.player.rect.left = 0
+                
+            self.clock.tick(FPS)
+            pygame.display.update()
+
+class Button:
+    def __init__ (self, x, y, width, height, fg, bg, content, fontsize):
+        self.font = pygame.font.Font('Font/joystix monospace.otf', fontsize)
+        self.content = content
+
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+        self.fg = fg
+        self.bg = bg
+
+        self.image = pygame.Surface((self.width, self.height))
+        self.image.fill(self.bg)
+        self.rect = self.image.get_rect()
+
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+        self.text = self.font.render(self.content, True, self.fg)
+        self.text_rect = self.text.get_rect(center=(self.width/2, self.height/2))
+        self.image.blit(self.text, self.text_rect)
+
+    def is_pressed(self, pos, pressed):
+        if self.rect.collidepoint(pos):
+            if pressed[0]:
+                return True
+            return False
+        return False
 
 game = Game()
 game.intro_screen()
