@@ -2,6 +2,7 @@ import pygame
 from sprites import *
 from config import *
 import sys
+import os
 
 class Game:
     def __init__(self):
