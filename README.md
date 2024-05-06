@@ -6,9 +6,10 @@ Dalam "Enigmatic Escape: Jaxon's Journey", pemain mengikuti petualangan Jaxon ya
 
 # Library
 Library : - Pygame
-
+          - Sys
+          
 # Cara menjalankan App
-.....
+Lewat Python Compiler
 
 # UML
 ![UML CLASS DIAGRAM (2)](https://github.com/Nommm-03/Tugas-Besar-PBO/assets/167625310/4cfc8307-44c4-492d-9a76-ec691698c941)
