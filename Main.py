@@ -62,7 +62,7 @@ class Game:
         title1_rect = title1.get_rect(x=420,y=60)
         title2 = self.title_font.render('Jaxon Journey', True, WHITE)
         title2_rect = title2.get_rect(x=415,y=115)
-        intro_background = pygame.image.load('start.png')
+        intro_background = pygame.image.load('Level/start.png')
 
         play_button = Button(830, 310, 100, 50, WHITE, BLACK, 'Play', 32)
 
