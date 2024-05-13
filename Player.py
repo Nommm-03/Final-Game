@@ -23,22 +23,18 @@ class Player():
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
-
-        self.jump_sound = pygame.mixer.Sound('Sound Effect/SFX_Jump_01.wav')
     
-    def update(self):
-        self.movement()
+    def update(self, bottom):
+        self.movement(bottom)
 
         self.rect.x += self.x_change
         
         self.gravity += 1
         self.rect.y += self.gravity
-        if self.rect.bottom >= 664:
-            self.rect.bottom = 664
 
         self.x_change = 0
 
-    def movement(self):
+    def movement(self, bottom):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
             self.x_change -= PLAYER_SPEED
@@ -46,6 +42,5 @@ class Player():
         if keys[pygame.K_d]:
             self.x_change += PLAYER_SPEED
             self.facing = 'right'
-        if keys[pygame.K_SPACE] and self.rect.bottom >= 664:
-            self.jump_sound.play()
-            self.gravity -= 15
+        if keys[pygame.K_SPACE] and self.rect.bottom >= bottom:
+            self.gravity -= 10
