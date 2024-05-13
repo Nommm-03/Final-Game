@@ -22,6 +22,7 @@ class Game:
 
         self.mouse_pos = pygame.mouse.get_pos()
         self.mouse_pressed = pygame.mouse.get_pressed()
+        self.open_sound = pygame.mixer.Sound('Sound Effect/qubodup-DoorOpen01.flac')
 
     def new(self):
         # a new game starts
@@ -84,6 +85,7 @@ class Game:
 
                     # START BUTTON
                     if event.key == pygame.K_RETURN and (self.player.rect.x >= 746 and self.player.rect.x <= 1011):  # Ketika tombol "Enter" ditekan
+                        self.open_sound.play()
                         self.intro = False
 
             self.screen.blit(intro_background, (0,0))
