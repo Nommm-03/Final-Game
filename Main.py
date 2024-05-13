@@ -15,13 +15,12 @@ class Game:
         self.background.fill(BLACK)
         self.level = 1
         self.player = Player(self, 1, 19)
+        self.bottom = 0
         
-        self.level1 = Level1(self)
-
+        self.level1 = Level1(self, self.player)
+        self.level1_1 = Level1_1(self, self.player)
         self.running = True
 
-        self.mouse_pos = pygame.mouse.get_pos()
-        self.mouse_pressed = pygame.mouse.get_pressed()
         self.open_sound = pygame.mixer.Sound('Sound Effect/qubodup-DoorOpen01.flac')
 
     def new(self):
@@ -37,18 +36,30 @@ class Game:
                     self.playing = False
                     self.running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    print(self.mouse_pos)
+                    print(mouse_pos)
+                
+                mouse_pos = pygame.mouse.get_pos()
                 
             self.screen.blit(self.background,(0,0))
-            
-            if self.level == 1:
-                game_background = pygame.image.load('Level/lv1.png')
+
+            if self.level == 1 and not self.level1.finished:
+                self.bottom = self.level1.bottom
+                game_background = pygame.image.load(self.level1.image).convert_alpha()
                 self.screen.blit(game_background,(200,0))
-                self.level1.movement()
+                self.level1.restrict()
+            
+            if self.level == 1.1 and not self.level1_1.finished:
+                self.bottom = self.level1_1.bottom
+                game_background = pygame.image.load(self.level1_1.image).convert_alpha()
+                self.screen.blit(game_background,(0,0))
+                self.level1_1.restrict()
+
+            if self.level1.finished:
+                self.level = 1.1
 
             self.screen.blit(self.player.image, self.player.rect)
-            self.player.movement()
-            self.player.update()
+            self.player.movement(self.bottom)
+            self.player.update(self.bottom)
             self.clock.tick(FPS)
             pygame.display.update()
         self.running = False
@@ -58,12 +69,12 @@ class Game:
 
     def intro_screen(self):
         self.intro = True
-
+        self.bottom = 664
         title1 = self.title_font.render('Enigma Escape', True, WHITE)
         title1_rect = title1.get_rect(x=420,y=60)
         title2 = self.title_font.render('Jaxon Journey', True, WHITE)
         title2_rect = title2.get_rect(x=415,y=115)
-        intro_background = pygame.image.load('Level/start.png')
+        intro_background = pygame.image.load('start.png').convert_alpha()
 
         play_button = Button(830, 310, 100, 50, WHITE, BLACK, 'Play', 32)
 
@@ -85,8 +96,8 @@ class Game:
 
                     # START BUTTON
                     if event.key == pygame.K_RETURN and (self.player.rect.x >= 746 and self.player.rect.x <= 1011):  # Ketika tombol "Enter" ditekan
-                        self.open_sound.play()
                         self.intro = False
+                        self.player.rect.x = 607
 
             self.screen.blit(intro_background, (0,0))
             self.screen.blit(title1, title1_rect)
@@ -96,12 +107,15 @@ class Game:
             self.screen.blit(self.player.image, self.player.rect)
 
             # Movement Player
-            self.player.movement()
-            self.player.update()
+            self.player.movement(self.bottom)
+            self.player.update(self.bottom)
             if self.player.rect.right >= 1250:
                 self.player.rect.right = 1250
             if self.player.rect.left <= 0:
                 self.player.rect.left = 0
+            if self.player.rect.bottom >= self.bottom:
+                self.player.rect.bottom = self.bottom
+                self.player.gravity = 0
                 
             self.clock.tick(FPS)
             pygame.display.update()
