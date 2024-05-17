@@ -13,49 +13,110 @@ class Game:
         self.title_font = pygame.font.Font('Font/joystix monospace.otf', 40)
         self.background = pygame.Surface((WIN_WIDTH,WIN_HEIGHT))
         self.background.fill(BLACK)
-        self.level = 1
+        self.level = '1'
         self.player = Player(self, 1, 19)
         self.bottom = 0
         
         self.level1 = Level1(self, self.player)
         self.level1_1 = Level1_1(self, self.player)
+        self.level1_1_1 = Level1_1_1(self, self.player)
+        self.level2 = Level2(self, self.player)
+        self.level3 = Level3(self, self.player)
+        self.level4 = Level4(self, self.player)
+        self.level5 = Level5(self, self.player)
+        self.end = LevelEnd(self, self.player)
         self.running = True
 
-        self.open_sound = pygame.mixer.Sound('Sound Effect/qubodup-DoorOpen01.flac')
+        # self.open_sound = pygame.mixer.Sound('Sound Effect/qubodup-DoorOpen01.flac')
 
     def new(self):
         # a new game starts
         self.playing = True
 
     def main(self):
-        #game loop 
-
+        # game loop 
         while self.playing:
+            mouse_pos = pygame.mouse.get_pos()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.playing = False
                     self.running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     print(mouse_pos)
-                
-                mouse_pos = pygame.mouse.get_pos()
-                
-            self.screen.blit(self.background,(0,0))
+                if event.type == pygame.KEYDOWN:
+                    if self.level == '1-1-1':
+                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 782 and self.player.rect.left <= 1103):
+                            self.level1_1_1.finished = True
+                            self.player.rect.x = 200
+                    elif self.level == '2':
+                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 877 and self.player.rect.left <= 1143):
+                            self.level2.finished = True
+                            self.player.rect.left = 0
+                    elif self.level == '3':
+                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 537 and self.player.rect.left <= 709 and self.player.rect.bottom <= 344):
+                            self.level3.finished = True
+                            self.player.rect.x = 651
+                            self.player.rect.bottom = 250
+                    elif self.level == '4':
+                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 239 and self.player.rect.left <= 571 and self.player.rect.bottom <= 600):
+                            self.level4.finished = True
 
-            if self.level == 1 and not self.level1.finished:
+            self.screen.blit(self.background, (0, 0))
+
+            if self.level == '1' and not self.level1.finished:
                 self.bottom = self.level1.bottom
                 game_background = pygame.image.load(self.level1.image).convert_alpha()
-                self.screen.blit(game_background,(200,0))
+                self.screen.blit(game_background, (200, 0))
                 self.level1.restrict()
-            
-            if self.level == 1.1 and not self.level1_1.finished:
+
+            if self.level == '1-1' and not self.level1_1.finished:
                 self.bottom = self.level1_1.bottom
                 game_background = pygame.image.load(self.level1_1.image).convert_alpha()
-                self.screen.blit(game_background,(0,0))
+                self.screen.blit(game_background, (0, 0))
                 self.level1_1.restrict()
 
+            if self.level == '1-1-1' and not self.level1_1_1.finished:
+                self.bottom = self.level1_1_1.bottom
+                game_background = pygame.image.load(self.level1_1_1.image).convert_alpha()
+                self.screen.blit(game_background, (0, 0))
+                self.level1_1_1.restrict()
+
+            if self.level == '2' and not self.level2.finished:
+                self.bottom = self.level2.bottom
+                game_background = pygame.image.load(self.level2.image).convert_alpha()
+                self.screen.blit(game_background, (0, 0))
+                self.level2.restrict()
+
+            if self.level == '3' and not self.level3.finished:
+                self.bottom = self.level3.bottom
+                game_background = pygame.image.load(self.level3.image).convert_alpha()
+                self.screen.blit(game_background, (0, 0))
+                self.level3.restrict()
+
+            if self.level == '4' and not self.level4.finished:
+                self.bottom = self.level4.bottom
+                game_background = pygame.image.load(self.level4.image).convert_alpha()
+                self.screen.blit(game_background, (0, 0))
+                self.level4.restrict()
+            
+            if self.level == '5' and not self.level5.finished:
+                self.bottom = self.level5.bottom
+                game_background = pygame.image.load(self.level5.image).convert_alpha()
+                self.screen.blit(game_background, (0, 0))
+                self.level5.restrict()
+
             if self.level1.finished:
-                self.level = 1.1
+                self.level = '1-1'
+            if self.level1_1.finished:
+                self.level = '1-1-1'
+            if self.level1_1_1.finished:
+                self.level = '2'
+            if self.level2.finished:
+                self.level = '3'
+            if self.level3.finished:
+                self.level = '4'
+            if self.level4.finished:
+                self.level = '5'
 
             self.screen.blit(self.player.image, self.player.rect)
             self.player.movement(self.bottom)
@@ -64,12 +125,13 @@ class Game:
             pygame.display.update()
         self.running = False
 
+
     def game_over(self):
         pass
 
     def intro_screen(self):
         self.intro = True
-        self.bottom = 664
+        self.bottom = 665
         title1 = self.title_font.render('Enigma Escape', True, WHITE)
         title1_rect = title1.get_rect(x=420,y=60)
         title2 = self.title_font.render('Jaxon Journey', True, WHITE)
