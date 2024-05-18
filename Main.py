@@ -11,6 +11,7 @@ class Game:
         self.caption = pygame.display.set_caption('Enigma Escape')
         self.clock = pygame.time.Clock()
         self.title_font = pygame.font.Font('Font/joystix monospace.otf', 40)
+        self.quiz_font = pygame.font.Font('Font/joystix monospace.otf', 15)
         self.background = pygame.Surface((WIN_WIDTH,WIN_HEIGHT))
         self.background.fill(BLACK)
         self.level = '1'
