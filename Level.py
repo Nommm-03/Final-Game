@@ -9,7 +9,7 @@ class Level1:
         self.bottom = 732
         self.finished = False
         self.has_key = False
-        self.key = Key((250, 350))
+        self.key = Key((250, 550))
 
     def restrict(self):
         # Batasan Tepi
