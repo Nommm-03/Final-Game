@@ -20,6 +20,7 @@ class Level1:
         if self.player.rect.left <= 200:
             self.player.rect.left = 0
             self.finished = True
+            self.game.has_notified = False
 
         # Batasan Dataran Tinggi dan Rendah
         if self.player.rect.left >= 200 and self.player.rect.left <= 350:
@@ -67,6 +68,7 @@ class Level1_1:
             self.player.rect.bottom = self.bottom
         if self.player.rect.right >= 1250:
             self.finished = True
+            self.game.has_notified = False
             self.player.rect.left = 0
         if self.player.rect.left <= 0:
             self.player.rect.left = 0
@@ -218,11 +220,6 @@ class Level4:
         if self.player.rect.left <= 0:
             self.player.rect.left = 0
 
-        if self.player.rect.bottom >= 665:
-            self.bottom = 256
-            self.player.rect.bottom = 256
-            self.player.rect.x = 651
-
         if 528 <= self.player.rect.right <= 778 and self.player.rect.bottom <= 258:
             self.bottom = 258
         elif 477 <= self.player.rect.left <= 669 and self.player.rect.bottom >= 270:
@@ -292,9 +289,28 @@ class Level5:
         self.image = 'Level/lv5.png'
         self.game = game
         self.player = player
+        self.has_silver_key = False
+        self.has_key = False
         self.bottom = 587
         self.finished = False
+        self.silver_key = silver_key((533, 352))
+        self.key = Key((678, 98))
+        self.quiz1_solved = False
+        self.quiz2_solved = False
+        self.show_puzzle_1 = False
+        self.show_puzzle_2 = False
+        self.question_1 = "kepanjangan dari SQL?"
+        self.options_1 = ["1. Simple Query Language", "2. Structured Query Language", "3. Standard Query Language"]
+        self.question_2 = "Kepanjangan HTML?"
+        self.options_2 = ["1. HyperText Markup Language", "2. Hyperlinks Text Markup Language", "3. High Tech Markup Language"]
+        self.puzzle_bg_image = pygame.image.load('Level/brown_age_by_darkwood67.jpg').convert()
 
+    def puzzle(self):
+        if 394 <= self.player.rect.right < 530 and not self.silver_key.collected and self.player.rect.bottom >= 380:
+            self.show_puzzle_1 = True
+        if 540 <= self.player.rect.right < 668 and self.silver_key.collected and not self.key.collected and self.player.rect.bottom >= 135:
+            self.show_puzzle_2 = True
+    
     def restrict(self):
         # Batasan Tepi
         if self.player.rect.bottom >= self.bottom:
@@ -340,6 +356,41 @@ class Level5:
             self.player.rect.right = 875
         elif self.player.rect.right > 875 and self.player.rect.right < 1250:
             self.bottom = 409
+            
+    def draw_puzzle(self, question, answer):
+        puzzle_width = 400
+        puzzle_height = 300
+        puzzle_surface = pygame.Surface((puzzle_width, puzzle_height))
+        bg_image_resized = pygame.transform.scale(self.puzzle_bg_image, (puzzle_width, puzzle_height))
+        puzzle_surface.blit(bg_image_resized, (0, 0))
+        question_text = self.game.quiz_font.render(question, True, (255, 255, 255))
+        puzzle_surface.blit(question_text, (puzzle_width // 2 - question_text.get_width() // 2, 50))
+
+        for i, option in enumerate(answer):
+            option_text = self.game.quiz_font.render(option, True, (255, 255, 255))
+            puzzle_surface.blit(option_text, (puzzle_width // 2 - option_text.get_width() // 2, 150 + i * 50))
+
+        # Posisi di tengah layar
+        screen_width, screen_height = self.game.screen.get_size()
+        pos_x = (screen_width - puzzle_width) // 2
+        pos_y = (screen_height - puzzle_height) // 2
+        self.game.screen.blit(puzzle_surface, (pos_x, pos_y))
+        
+    def draw_key(self):
+        if self.quiz2_solved:
+            self.key.draw(self.game.screen)
+            self.key.collect(self.player.rect)
+            if self.key.collected and not self.has_key:
+                self.has_key = True
+                self.game.notification_start_time = pygame.time.get_ticks()
+                self.game.notification_message = "Kunci telah didapatkan!"
+        if self.quiz1_solved and not self.quiz2_solved:
+            self.silver_key.draw(self.game.screen)
+            self.silver_key.collect(self.player.rect)
+            if self.silver_key.collected and not self.has_silver_key:
+                self.has_silver_key = True
+                self.game.notification_start_time = pygame.time.get_ticks()
+                self.game.notification_message = "Kunci silver telah didapatkan!"
 
 class Level5_5:
     def __init__(self, game, player):
