@@ -7,6 +7,8 @@ class Level1:
         self.player = player
         self.bottom = 732
         self.finished = False
+        self.has_key = False
+        self.key = Key((250, 350))
 
     def restrict(self):
         # Batasan Tepi
@@ -41,6 +43,14 @@ class Level1:
             self.bottom = 703
         if self.player.rect.left >= 460 and self.player.rect.left < 468:
             self.bottom = 717
+            
+    def draw_key(self):
+        self.key.draw(self.game.screen)
+        self.key.collect(self.player.rect)
+        if self.key.collected and not self.has_key:
+            self.has_key = True
+            self.game.notification_start_time = pygame.time.get_ticks()
+            self.game.notification_message = "Kunci telah didapatkan!"
 
 class Level1_1:
     def __init__(self, game, player):
@@ -84,7 +94,18 @@ class Level2:
         self.player = player
         self.bottom = 665
         self.finished = False
+        self.has_key = False
+        self.solved = False
+        self.key = Key((764, 615))
+        self.show_puzzle = False
+        self.question = "K = 5   YGZA JOZGSHGN YGZA?"
+        self.options = ["1. JAGX", "2. ZOMG", "3. KTGS"]
+        self.puzzle_bg_image = pygame.image.load('Level/brown_age_by_darkwood67.jpg').convert()
 
+    def puzzle(self):
+        if 484 <= self.player.rect.right < 764:
+            self.show_puzzle = True
+            
     def restrict(self):
         # Batasan Tepi
         if self.player.rect.bottom >= self.bottom:
@@ -93,6 +114,33 @@ class Level2:
             self.player.rect.right = 1250
         if self.player.rect.left <= 0:
             self.player.rect.left = 0
+            
+    def draw_puzzle(self):
+        puzzle_width = 400
+        puzzle_height = 300
+        puzzle_surface = pygame.Surface((puzzle_width, puzzle_height))
+        bg_image_resized = pygame.transform.scale(self.puzzle_bg_image, (puzzle_width, puzzle_height))
+        puzzle_surface.blit(bg_image_resized, (0, 0))
+        question_text = self.game.quiz_font.render(self.question, True, (255, 255, 255))
+        puzzle_surface.blit(question_text, (puzzle_width // 2 - question_text.get_width() // 2, 50))
+
+        for i, option in enumerate(self.options):
+            option_text = self.game.quiz_font.render(option, True, (255, 255, 255))
+            puzzle_surface.blit(option_text, (puzzle_width // 2 - option_text.get_width() // 2, 150 + i * 50))
+
+        # Posisi di tengah layar
+        screen_width, screen_height = self.game.screen.get_size()
+        pos_x = (screen_width - puzzle_width) // 2
+        pos_y = (screen_height - puzzle_height) // 2
+        self.game.screen.blit(puzzle_surface, (pos_x, pos_y))
+
+    def draw_key(self):
+        self.key.draw(self.game.screen)
+        self.key.collect(self.player.rect)
+        if self.key.collected and not self.has_key:
+            self.has_key = True
+            self.game.notification_start_time = pygame.time.get_ticks()
+            self.game.notification_message = "Kunci telah didapatkan!"
 
 class Level3:
     def __init__(self, game, player):
@@ -101,6 +149,8 @@ class Level3:
         self.player = player
         self.bottom = 405
         self.finished = False
+        self.has_key = False
+        self.key = Key((300, 400))
 
     def restrict(self):
         # Batasan Tepi
@@ -139,7 +189,14 @@ class Level3:
             self.player.rect.left = 802
         if self.player.rect.top <= 375 and self.player.rect.left >= 791 and self.player.rect.left <= 802:
             self.player.rect.top = 375
-
+            
+    def draw_key(self):
+        self.key.draw(self.game.screen)
+        self.key.collect(self.player.rect)
+        if self.key.collected and not self.has_key:
+            self.has_key = True
+            self.game.notification_start_time = pygame.time.get_ticks()
+            self.game.notification_message = "Kunci telah didapatkan!"
 
 class Level4:
     def __init__(self, game, player):
@@ -148,6 +205,8 @@ class Level4:
         self.player = player
         self.bottom = 256
         self.finished = False
+        self.has_key = False
+        self.key = Key((550, 650))
 
     def restrict(self):
         # Batasan Tepi
@@ -218,6 +277,14 @@ class Level4:
             self.bottom = 579
         if self.player.rect.left >= 215 and self.player.rect.left < 219:
             self.bottom = 581
+            
+    def draw_key(self):
+        self.key.draw(self.game.screen)
+        self.key.collect(self.player.rect)
+        if self.key.collected and not self.has_key:
+            self.has_key = True
+            self.game.notification_start_time = pygame.time.get_ticks()
+            self.game.notification_message = "Kunci telah didapatkan!"
 
 class Level5:
     def __init__(self, game, player):
