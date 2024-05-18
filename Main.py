@@ -28,7 +28,30 @@ class Game:
         self.end = LevelEnd(self, self.player)
         self.running = True
 
-        # self.open_sound = pygame.mixer.Sound('Sound Effect/qubodup-DoorOpen01.flac')
+        self.opening_quiz_sound = pygame.mixer.Sound('Sound Effect/Page Turning Sfx.wav')
+        self.wrong_sound = pygame.mixer.Sound('Sound Effect/wrong_sound_effect.mp3')
+        self.correct_sound = pygame.mixer.Sound('Sound Effect/correct_sound_effect.mp3')
+        self.open_sound = pygame.mixer.Sound('Sound Effect/qubodup-DoorOpen01.flac')
+        self.notification_sound = pygame.mixer.Sound('Sound Effect/Tolling Bell-Bright.mp3')
+        self.notification_start_time = None
+        self.notification_message = ""
+        self.has_notified = False
+        self.sound_played = False
+
+    def show_notification(self, message, duration=2000):
+        if self.notification_start_time is None:
+            return
+
+        current_time = pygame.time.get_ticks()
+        if current_time - self.notification_start_time < duration:
+            font = pygame.font.Font('Font/joystix monospace.otf', 40)
+            text_surface = font.render(message, True, (255, 255, 255))
+            text_rect = text_surface.get_rect(center=(WIN_WIDTH // 2, 100))  # Posisikan di tengah, dengan y=100
+            self.screen.blit(text_surface, text_rect.topleft)
+
+        else:
+            self.notification_start_time = None
+            self.notification_message = ""
 
     def new(self):
         # a new game starts
@@ -46,23 +69,69 @@ class Game:
                     print(mouse_pos)
                 if event.type == pygame.KEYDOWN:
                     if self.level == '1-1-1':
-                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 782 and self.player.rect.left <= 1103):
+                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 782 and self.player.rect.left <= 1103) and self.level1.has_key:
+                            self.open_sound.play()
+                            self.has_notified = False
                             self.level1_1_1.finished = True
                             self.player.rect.x = 200
+                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 782 and self.player.rect.left <= 1103) and not self.level1.has_key:
+                            self.notification_start_time = pygame.time.get_ticks()
+                            self.notification_message = "Butuh Kunci!"
+                            self.notification_sound.play()
                     elif self.level == '2':
-                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 877 and self.player.rect.left <= 1143):
+                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 877 and self.player.rect.left <= 1143) and self.level2.has_key:
+                            self.open_sound.play()
+                            self.has_notified = False
                             self.level2.finished = True
                             self.player.rect.left = 0
+                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 877 and self.player.rect.left <= 1143) and not self.level2.has_key:
+                            self.notification_start_time = pygame.time.get_ticks()
+                            self.notification_message = "Butuh Kunci!"
+                            self.notification_sound.play()
+                        if event.key == pygame.K_RETURN and (484 <= self.player.rect.right < 764):
+                            self.level2.puzzle()
+                        if self.level2.show_puzzle:
+                            if not self.sound_played:
+                                self.opening_quiz_sound.play()
+                                self.sound_played = True
+                            if event.key == pygame.K_ESCAPE:
+                                self.opening_quiz_sound.play()
+                                self.level2.show_puzzle = False
+                                self.sound_played = False
+                            elif event.key == pygame.K_1:
+                                self.opening_quiz_sound.play()
+                                self.correct_sound.play()
+                                self.notification_start_time = pygame.time.get_ticks()
+                                self.notification_message = "Jawaban Benar! Kunci telah didrop."
+                                self.level2.solved = True
+                                self.level2.show_puzzle = False
+                            elif event.key == pygame.K_2:
+                                self.wrong_sound.play()
+                                self.notification_start_time = pygame.time.get_ticks()
+                                self.notification_message = "Jawaban Salah!"
+                            elif event.key == pygame.K_3:
+                                self.wrong_sound.play()
+                                self.notification_start_time = pygame.time.get_ticks()
+                                self.notification_message = "Jawaban Salah!"
                     elif self.level == '3':
-                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 537 and self.player.rect.left <= 709 and self.player.rect.bottom <= 344):
+                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 537 and self.player.rect.left <= 709 and self.player.rect.bottom <= 500) and self.level3.has_key:
+                            self.open_sound.play()
+                            self.has_notified = False
                             self.level3.finished = True
                             self.player.rect.x = 651
                             self.player.rect.bottom = 250
+                        elif event.key == pygame.K_RETURN and (self.player.rect.right >= 537 and self.player.rect.left <= 709 and self.player.rect.bottom <= 500) and not self.level3.has_key:
+                            self.notification_start_time = pygame.time.get_ticks()
+                            self.notification_message = "Butuh Kunci!"
+                            self.notification_sound.play()
                     elif self.level == '4':
-                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 239 and self.player.rect.left <= 571 and self.player.rect.bottom <= 600):
+                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 239 and self.player.rect.left <= 425) and self.level4.has_key:
+                            self.has_notified = False
                             self.level4.finished = True
-                            self.player.rect.bottom = 587
-                            self.player.rect.x = 32
+                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 239 and self.player.rect.left <= 425)and not self.level4.has_key:
+                            self.notification_start_time = pygame.time.get_ticks()
+                            self.notification_message = "Butuh Kunci!"
+                            self.notification_sound.play()
                     elif self.level == '5':
                         if event.key == pygame.K_RETURN and (self.player.rect.right >= 1013 and self.player.rect.left <= 1168 and self.player.rect.bottom <= 412):
                             self.level5.finished = True
@@ -74,58 +143,105 @@ class Game:
             self.screen.blit(self.background, (0, 0))
 
             if self.level == '1' and not self.level1.finished:
+                if not self.has_notified:
+                    self.notification_start_time = pygame.time.get_ticks()
+                    self.notification_message = "ROOM 1"
+                    self.has_notified = True
                 self.bottom = self.level1.bottom
                 game_background = pygame.image.load(self.level1.image).convert_alpha()
                 self.screen.blit(game_background, (200, 0))
                 self.level1.restrict()
+                self.level1.draw_key()
 
             if self.level == '1-1' and not self.level1_1.finished:
+                if not self.has_notified:
+                    self.notification_start_time = pygame.time.get_ticks()
+                    self.notification_message = "ROOM 1.1"
+                    self.has_notified = True
                 self.bottom = self.level1_1.bottom
                 game_background = pygame.image.load(self.level1_1.image).convert_alpha()
                 self.screen.blit(game_background, (0, 0))
                 self.level1_1.restrict()
 
             if self.level == '1-1-1' and not self.level1_1_1.finished:
+                if not self.has_notified:
+                    self.notification_start_time = pygame.time.get_ticks()
+                    self.notification_message = "ROOM 1.1.1"
+                    self.has_notified = True
                 self.bottom = self.level1_1_1.bottom
                 game_background = pygame.image.load(self.level1_1_1.image).convert_alpha()
                 self.screen.blit(game_background, (0, 0))
                 self.level1_1_1.restrict()
 
             if self.level == '2' and not self.level2.finished:
+                if not self.has_notified:
+                    self.notification_start_time = pygame.time.get_ticks()
+                    self.notification_message = "ROOM 2"
+                    self.level2.key.collected = False
+                    self.has_notified = True
                 self.bottom = self.level2.bottom
                 game_background = pygame.image.load(self.level2.image).convert_alpha()
                 self.screen.blit(game_background, (0, 0))
                 self.level2.restrict()
+                if self.level2.show_puzzle and not self.level2.solved:
+                    self.level2.draw_puzzle()
+                if self.level2.solved:
+                    self.level2.draw_key()
 
             if self.level == '3' and not self.level3.finished:
+                if not self.has_notified:
+                    self.notification_start_time = pygame.time.get_ticks()
+                    self.notification_message = "ROOM 3"
+                    self.has_notified = True
                 self.bottom = self.level3.bottom
                 game_background = pygame.image.load(self.level3.image).convert_alpha()
                 self.screen.blit(game_background, (0, 0))
                 self.level3.restrict()
+                self.level3.draw_key()
 
             if self.level == '4' and not self.level4.finished:
+                if not self.has_notified:
+                    self.notification_start_time = pygame.time.get_ticks()
+                    self.notification_message = "ROOM 4"
+                    self.has_notified = True
                 self.bottom = self.level4.bottom
                 game_background = pygame.image.load(self.level4.image).convert_alpha()
-                self.screen.blit(game_background, (0, 0))
                 self.level4.restrict()
+                self.level4.draw_key()
+                self.screen.blit(game_background, (0, 0))
             
             if self.level == '5' and not self.level5.finished:
+                if not self.has_notified:
+                    self.notification_start_time = pygame.time.get_ticks()
+                    self.notification_message = "ROOM 5"
+                    self.has_notified = True
                 self.bottom = self.level5.bottom
                 game_background = pygame.image.load(self.level5.image).convert_alpha()
                 self.screen.blit(game_background, (0, 0))
                 self.level5.restrict()
             
             if self.level == '5-5' and not self.level5_5.finished:
+                if not self.has_notified:
+                    self.notification_start_time = pygame.time.get_ticks()
+                    self.notification_message = "ROOM 5.5"
+                    self.has_notified = True
                 self.bottom = self.level5_5.bottom
                 game_background = pygame.image.load(self.level5_5.image).convert_alpha()
                 self.screen.blit(game_background, (0, 0))
                 self.level5_5.restrict()
 
             if self.level == 'End' and not self.end.finished:
+                if not self.has_notified:
+                    self.notification_start_time = pygame.time.get_ticks()
+                    self.notification_message = "END"
+                    self.has_notified = True
                 self.bottom = self.end.bottom
                 game_background = pygame.image.load(self.end.image).convert_alpha()
                 self.screen.blit(game_background, (0, 0))
                 self.end.restrict()
+
+            if self.notification_start_time:
+                self.show_notification(self.notification_message)
 
             if self.level1.finished:
                 self.level = '1-1'
@@ -158,11 +274,11 @@ class Game:
     def intro_screen(self):
         self.intro = True
         self.bottom = 665
-        title1 = self.title_font.render('Enigma Escape', True, WHITE)
+        title1 = self.title_font.render('Enigmatic Escape', True, WHITE)
         title1_rect = title1.get_rect(x=420,y=60)
         title2 = self.title_font.render('Jaxon Journey', True, WHITE)
         title2_rect = title2.get_rect(x=415,y=115)
-        intro_background = pygame.image.load('start.png').convert_alpha()
+        intro_background = pygame.image.load('Level/start.png').convert_alpha()
 
         play_button = Button(830, 310, 100, 50, WHITE, BLACK, 'Play', 32)
 
@@ -184,6 +300,7 @@ class Game:
 
                     # START BUTTON
                     if event.key == pygame.K_RETURN and (self.player.rect.x >= 746 and self.player.rect.x <= 1011):  # Ketika tombol "Enter" ditekan
+                        self.open_sound.play()
                         self.intro = False
                         self.player.rect.x = 607
 
