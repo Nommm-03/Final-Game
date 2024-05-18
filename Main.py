@@ -134,8 +134,63 @@ class Game:
                             self.notification_message = "Butuh Kunci!"
                             self.notification_sound.play()
                     elif self.level == '5':
-                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 1013 and self.player.rect.left <= 1168 and self.player.rect.bottom <= 412):
+                         if event.key == pygame.K_RETURN and (self.player.rect.right >= 1013 and self.player.rect.left <= 1168 and self.player.rect.bottom >= 405) and self.level5.has_key:
                             self.level5.finished = True
+                            self.open_sound.play()
+                            self.has_notified = False
+                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 1013 and self.player.rect.left <= 1168 and self.player.rect.bottom >= 405) and not self.level5.has_key:
+                            self.notification_start_time = pygame.time.get_ticks()
+                            self.notification_message = "Butuh Kunci!"
+                            self.notification_sound.play()
+                        if event.key == pygame.K_RETURN and ((394 <= self.player.rect.right < 530 and self.player.rect.bottom >= 380) or (540 <= self.player.rect.right < 668 and self.player.rect.bottom >= 135)):
+                            self.level5.puzzle()
+                        if self.level5.show_puzzle_1:
+                            if not self.sound_played:
+                                self.opening_quiz_sound.play()
+                                self.sound_played = True
+                            if event.key == pygame.K_ESCAPE:
+                                self.opening_quiz_sound.play()
+                                self.level5.show_puzzle_1 = False
+                                self.sound_played = False
+                            elif event.key == pygame.K_1:
+                                self.wrong_sound.play()
+                                self.notification_start_time = pygame.time.get_ticks()
+                                self.notification_message = "Jawaban Salah!"
+                            elif event.key == pygame.K_2:
+                                self.opening_quiz_sound.play()
+                                self.correct_sound.play()
+                                self.notification_start_time = pygame.time.get_ticks()
+                                self.notification_message = "Jawaban Benar! Kunci telah didrop."
+                                self.level5.quiz1_solved = True
+                                self.level5.show_puzzle_1 = False
+                                self.sound_played = False
+                            elif event.key == pygame.K_3:
+                                self.wrong_sound.play()
+                                self.notification_start_time = pygame.time.get_ticks()
+                                self.notification_message = "Jawaban Salah!"
+                        if self.level5.show_puzzle_2 and self.level5.has_silver_key:
+                            if not self.sound_played:
+                                self.opening_quiz_sound.play()
+                                self.sound_played = True
+                            if event.key == pygame.K_ESCAPE:
+                                self.opening_quiz_sound.play()
+                                self.level5.show_puzzle_2 = False
+                                self.sound_played = False
+                            elif event.key == pygame.K_1:
+                                self.opening_quiz_sound.play()
+                                self.correct_sound.play()
+                                self.notification_start_time = pygame.time.get_ticks()
+                                self.notification_message = "Jawaban Benar! Kunci telah didrop."
+                                self.level5.quiz2_solved = True
+                                self.level5.show_puzzle_2 = False
+                            elif event.key == pygame.K_2:
+                                self.wrong_sound.play()
+                                self.notification_start_time = pygame.time.get_ticks()
+                                self.notification_message = "Jawaban Salah!"
+                            elif event.key == pygame.K_3:
+                                self.wrong_sound.play()
+                                self.notification_start_time = pygame.time.get_ticks()
+                                self.notification_message = "Jawaban Salah!"
                     elif self.level == '5-5':
                         if event.key == pygame.K_RETURN and (self.player.rect.right >= 152 and self.player.rect.left <= 473 and self.player.rect.bottom <= 675):
                             self.level5_5.finished = True
@@ -220,6 +275,12 @@ class Game:
                 game_background = pygame.image.load(self.level5.image).convert_alpha()
                 self.screen.blit(game_background, (0, 0))
                 self.level5.restrict()
+                if self.level5.show_puzzle_1 and not self.level5.quiz1_solved:
+                    self.level5.draw_puzzle(self.level5.question_1, self.level5.options_1)
+                if self.level5.show_puzzle_2 and not self.level5.quiz2_solved:
+                    self.level5.draw_puzzle(self.level5.question_2, self.level5.options_2)
+                if self.level5.quiz1_solved or self.level5.quiz2_solved:
+                    self.level5.draw_key()
             
             if self.level == '5-5' and not self.level5_5.finished:
                 if not self.has_notified:
