@@ -110,7 +110,6 @@ class Level3:
             self.player.rect.right = 1250
         if self.player.rect.left <= 0:
             self.player.rect.left = 0
-
         # Left Side
         if self.player.rect.left < 272:
             self.bottom = 405
@@ -159,13 +158,15 @@ class Level4:
         if self.player.rect.left <= 0:
             self.player.rect.left = 0
 
+        if self.player.rect.bottom >= 665:
+            self.bottom = 256
+            self.player.rect.bottom = 256
+            self.player.rect.x = 651
+
         if 528 <= self.player.rect.right <= 778 and self.player.rect.bottom <= 258:
             self.bottom = 258
         elif 477 <= self.player.rect.left <= 669 and self.player.rect.bottom >= 270:
             self.bottom = 708
-        elif 463 <= self.player.rect.x <= 681 and self.player.rect.bottom >= 700:
-            self.bottom = 256
-            self.player.rect.x = 651
         elif 219 <= self.player.rect.left <= 477:
             self.bottom = 592
         elif 0 < self.player.rect.left < 118:
@@ -232,18 +233,70 @@ class Level5:
             self.player.rect.bottom = self.bottom
         if self.player.rect.right >= 1250:
             self.player.rect.right = 1250
+        if self.player.rect.left <= 15:
+            self.player.rect.left = 15
+
+        if self.player.rect.bottom >= 649:
+            self.bottom = 588
+            self.player.rect.bottom = 587
+            self.player.rect.x = 32
+
+        # platform 2
+        elif self.player.rect.right >= 482 and self.player.rect.left <= 727 and self.player.rect.bottom <= 147:
+            self.bottom = 147
+
+        # Platform 1
+        elif self.player.rect.right >= 348 and self.player.rect.left <= 577 and self.player.rect.bottom <= 399:
+            self.bottom = 399
+        
+        # Land
+        elif 0 > self.player.rect.left <= 271:
+            self.bottom = 588
+        elif self.player.rect.left > 271 and self.player.rect.right < 462:
+            self.bottom = 688
+        elif self.player.rect.right >= 462 and self.player.rect.right < 570:
+            self.bottom = 594
+        elif self.player.rect.right >= 570 and self.player.rect.bottom > 543:
+            self.player.rect.right = 570
+        elif self.player.rect.right > 570 and self.player.rect.right < 665:
+            self.bottom = 543
+        elif self.player.rect.right >= 665 and self.player.rect.bottom > 480:
+            self.player.rect.right = 665
+        elif self.player.rect.right > 665 and self.player.rect.right < 764:
+            self.bottom = 480
+        elif self.player.rect.right >= 764 and self.player.rect.bottom > 444:
+            self.player.rect.right = 764
+        elif self.player.rect.right > 764 and self.player.rect.right < 875:
+            self.bottom = 442
+        elif self.player.rect.right >= 875 and self.player.rect.bottom > 409:
+            self.player.rect.right = 875
+        elif self.player.rect.right > 875 and self.player.rect.right < 1250:
+            self.bottom = 409
+
+class Level5_5:
+    def __init__(self, game, player):
+        self.image = 'Level/lv5-5.png'
+        self.game = game
+        self.player = player
+        self.bottom = 670
+        self.finished = False
+
+    def restrict(self):
+        # Batasan Tepi
+        if self.player.rect.bottom >= self.bottom:
+            self.player.rect.bottom = self.bottom
+        if self.player.rect.right >= 1250:
+            self.player.rect.right = 1250
         if self.player.rect.left <= 0:
             self.player.rect.left = 0
 
-        if self.player.rect.right >= 529 and self.player.rect.left <= 778 and self.player.rect.bottom <= 258:
-            self.bottom = 258
         
 class LevelEnd:
     def __init__(self, game, player):
-        self.image = 'Level/end.png'
+        self.image = 'Level/end.jpg'
         self.game = game
         self.player = player
-        self.bottom = 665
+        self.bottom = 670
         self.finished = False
 
     def restrict(self):
