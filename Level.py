@@ -1,4 +1,5 @@
 import pygame
+from key import *
 
 class Level1:
     def __init__(self, game, player):
