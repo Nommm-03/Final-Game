@@ -2,6 +2,7 @@ import pygame
 from Player import *
 from Level import *
 from config import *
+from npc import *
 import sys
 
 class Game:
@@ -38,6 +39,10 @@ class Game:
         self.notification_message = ""
         self.has_notified = False
         self.sound_played = False
+        
+        self.npc1 = NPC((680, 530), "Selamat datang di Enigmatic Journey, Tujuan utamamu disini adalah untuk menemukan kunci di setiap levelnya. untuk level pertama, kamu akan diberi petunjuk-petunjuk yang akan kamu butuhkan untuk keluar dari mansion ini.")
+        self.npc2 = NPC((236, 470), "Di dalam mansion ini, kamu akan menemui banyak rintangan seperti puzzle, kuis, dan mosnter. Lewati semua rintangan itu untuk lanjut ke ruangan selanjutnya!")
+        self.npc3 = NPC((603,470), "Jika kamu sudah memiliki kunci emas, kamu bisa memasuki pintu untuk menuju ruangan selanjutnya.")
 
     def show_notification(self, message, duration=2000):
         if self.notification_start_time is None:
@@ -69,7 +74,16 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     print(mouse_pos)
                 if event.type == pygame.KEYDOWN:
+                    if self.level == '1' and event.key == pygame.K_RETURN and 742 <= self.player.rect.right and self.player.rect.left <= 791:
+                        self.opening_quiz_sound.play()
+                        self.npc1.toggle_dialog()
+                    if self.level == '1-1' and event.key == pygame.K_RETURN and 293 <= self.player.rect.right and self.player.rect.left <= 358:
+                        self.opening_quiz_sound.play()
+                        self.npc2.toggle_dialog()
                     if self.level == '1-1-1':
+                        if event.key == pygame.K_RETURN and 669 <= self.player.rect.right and self.player.rect.left <= 715:
+                            self.npc3.toggle_dialog()
+                            self.opening_quiz_sound.play()
                         if event.key == pygame.K_RETURN and (self.player.rect.right >= 782 and self.player.rect.left <= 1103) and self.level1.has_key:
                             self.open_sound.play()
                             self.has_notified = False
@@ -208,6 +222,7 @@ class Game:
                 self.screen.blit(game_background, (200, 0))
                 self.level1.restrict()
                 self.level1.draw_key()
+                self.npc1.draw(self.screen)
 
             if self.level == '1-1' and not self.level1_1.finished:
                 if not self.has_notified:
@@ -218,6 +233,7 @@ class Game:
                 game_background = pygame.image.load(self.level1_1.image).convert_alpha()
                 self.screen.blit(game_background, (0, 0))
                 self.level1_1.restrict()
+                self.npc2.draw(self.screen)
 
             if self.level == '1-1-1' and not self.level1_1_1.finished:
                 if not self.has_notified:
@@ -228,6 +244,7 @@ class Game:
                 game_background = pygame.image.load(self.level1_1_1.image).convert_alpha()
                 self.screen.blit(game_background, (0, 0))
                 self.level1_1_1.restrict()
+                self.npc3.draw(self.screen)
 
             if self.level == '2' and not self.level2.finished:
                 if not self.has_notified:
