@@ -12,3 +12,20 @@ class NPC:
       self.dialog_rect = self.dialog_bg_image.get_rect(center=(WIN_WIDTH // 2, WIN_HEIGHT // 2))  # Center dialog window
       self.font = pygame.font.Font('Font/joystix monospace.otf', 12)
       self.showing_dialog = False
+    
+  def draw(self, screen):
+      screen.blit(self.img_resized, self.rect.topleft)
+      if self.showing_dialog:
+          screen.blit(self.dialog_bg_image, self.dialog_rect.topleft)
+          self.draw_text(screen, self.dialog_text, self.font, (0, 0, 0), self.dialog_rect)
+
+  def draw_text(self, screen, text, font, color, rect):
+      lines = self.wrap_text(text, font, rect.width)
+      y_offset = rect.y + 10
+      for line in lines:
+          text_surface = font.render(line, True, color)
+          text_rect = text_surface.get_rect(center=(rect.centerx, y_offset))
+          screen.blit(text_surface, text_rect.topleft)
+          y_offset += font.get_linesize() + 5
+
+    
