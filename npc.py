@@ -27,5 +27,22 @@ class NPC:
           text_rect = text_surface.get_rect(center=(rect.centerx, y_offset))
           screen.blit(text_surface, text_rect.topleft)
           y_offset += font.get_linesize() + 5
+        
+  def wrap_text(self, text, font, max_width):
+        words = text.split(' ')
+        lines = []
+        current_line = ''
+        for word in words:
+            test_line = current_line + word + ' '
+            if font.size(test_line)[0] <= max_width:
+                current_line = test_line
+            else:
+                lines.append(current_line)
+                current_line = word + ' '
+        lines.append(current_line)
+        return lines
+
+    def toggle_dialog(self):
+        self.showing_dialog = not self.showing_dialog
 
     
