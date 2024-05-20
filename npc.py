@@ -2,7 +2,7 @@ import pygame
 from config import*
 
 class NPC:
-  def _init_(self,position,dialog_text):
+  def __init__(self,position,dialog_text):
       self.image = pygame.image.load('Level/npc.png').convert_alpha()
       self.img_resized= pygame.transform.scale(self.image, (200,200))
       self.rect = self.img_resized.get_rect(topleft=position)
