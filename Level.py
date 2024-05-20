@@ -18,7 +18,7 @@ class Level1:
         if self.player.rect.right >= 787:
             self.player.rect.right = 787
         if self.player.rect.left <= 200:
-            self.player.rect.left = 0
+            self.player.rect.left = 30
             self.finished = True
             self.game.has_notified = False
 
@@ -61,6 +61,8 @@ class Level1_1:
         self.player = player
         self.bottom = 665
         self.finished = False
+        self.game.enemy_moving1.rect.x = 635
+        self.game.enemy_moving2.rect.x = 1150
 
     def restrict(self):
         # Batasan Tepi
@@ -71,7 +73,13 @@ class Level1_1:
             self.game.has_notified = False
             self.player.rect.left = 0
         if self.player.rect.left <= 0:
-            self.player.rect.left = 0
+            self.game.level = '1'
+            self.game.level1.finished = False
+            self.player.rect.left = 210
+
+    def collision(self, enemy):
+        if self.player.rect.colliderect(enemy.rect):
+            self.player.rect.left = 30
 
 class Level1_1_1:
     def __init__(self, game, player):
@@ -95,6 +103,7 @@ class Level2:
         self.image = 'Level/lv2.png'
         self.game = game
         self.player = player
+        self.game.enemy_moving3.rect.x = 1150
         self.bottom = 665
         self.finished = False
         self.has_key = False
@@ -145,16 +154,22 @@ class Level2:
             self.game.notification_start_time = pygame.time.get_ticks()
             self.game.notification_message = "Kunci telah didapatkan!"
 
+    def collision(self, enemy):
+        if self.player.rect.colliderect(enemy.rect):
+            self.player.rect.x = 200
+
 class Level3:
     def __init__(self, game, player):
         self.image = 'Level/lv3.png'
         self.game = game
         self.player = player
         self.bottom = 405
+        self.game.enemy_moving4.rect.x = 465
+        self.game.enemy_moving5.rect.x = 710
         self.finished = False
+        self.solved = False
         self.has_key = False
         self.key = Key((300, 400))
-        self.solved = False
         self.show_puzzle = False
         self.question = "5+4=920; 9+7=1663; maka 6+3="
         self.options = ["1. 1026", "2. 4210", "3. 918"]
@@ -163,13 +178,13 @@ class Level3:
     def puzzle(self):
         if 175 <= self.player.rect.right < 297:
             self.show_puzzle = True
-            
+
     def restrict(self):
         # Batasan Tepi
         if self.player.rect.bottom >= self.bottom:
             self.player.rect.bottom = self.bottom
-        if self.player.rect.right >= 1250:
-            self.player.rect.right = 1250
+        if self.player.rect.right >= 801:
+            self.player.rect.right = 801
         if self.player.rect.left <= 0:
             self.player.rect.left = 0
         # Left Side
@@ -188,20 +203,6 @@ class Level3:
         if self.player.rect.top <= 375 and self.player.rect.right >= 373 and self.player.rect.right <= 375:
             self.player.rect.top = 375
 
-        # right side
-        if self.player.rect.right > 976:
-            self.bottom = 405
-        elif self.player.rect.right > 894 and self.player.rect.right <= 976:
-            self.bottom = 445
-        elif self.player.rect.left > 791 and self.player.rect.right <= 894:
-            self.bottom = 483
-        if self.player.rect.left <= 791 and self.player.rect.right > 500 and self.player.rect.top >= 375 and self.player.rect.bottom <= 483:
-            self.player.rect.left = 791
-        if self.player.rect.left <= 802 and self.player.rect.right > 500 and self.player.rect.bottom >= 345 and self.player.rect.top <= 373:
-            self.player.rect.left = 802
-        if self.player.rect.top <= 375 and self.player.rect.left >= 791 and self.player.rect.left <= 802:
-            self.player.rect.top = 375
-            
     def draw_puzzle(self):
         puzzle_width = 400
         puzzle_height = 300
@@ -220,7 +221,8 @@ class Level3:
         pos_x = (screen_width - puzzle_width) // 2
         pos_y = (screen_height - puzzle_height) // 2
         self.game.screen.blit(puzzle_surface, (pos_x, pos_y))
-        
+
+
     def draw_key(self):
         self.key.draw(self.game.screen)
         self.key.collect(self.player.rect)
@@ -228,6 +230,10 @@ class Level3:
             self.has_key = True
             self.game.notification_start_time = pygame.time.get_ticks()
             self.game.notification_message = "Kunci telah didapatkan!"
+
+    def collision(self, enemy):
+        if self.player.rect.colliderect(enemy.rect):
+            self.player.rect.left = 0
 
 class Level4:
     def __init__(self, game, player):
@@ -237,7 +243,8 @@ class Level4:
         self.bottom = 256
         self.finished = False
         self.has_key = False
-        self.key = Key((550, 650))
+        self.key = Key((550, 490))
+        self.game.enemy_moving6.rect.x = 390
 
     def restrict(self):
         # Batasan Tepi
@@ -248,15 +255,15 @@ class Level4:
         if self.player.rect.left <= 0:
             self.player.rect.left = 0
 
-        if 528 <= self.player.rect.right <= 831 and self.player.rect.bottom <= 258:
+        if 528 <= self.player.rect.right <= 778 and self.player.rect.bottom <= 258:
             self.bottom = 258
-        elif 477 <= self.player.rect.left <= 600 and self.player.rect.bottom >= 270:
+        elif 477 <= self.player.rect.left <= 669 and self.player.rect.bottom >= 270:
             self.bottom = 708
         elif 219 <= self.player.rect.left <= 477:
             self.bottom = 592
         elif 0 < self.player.rect.left < 118:
             self.bottom = 480
-        elif 671 <= self.player.rect.right < 768:
+        elif 668 <= self.player.rect.right < 749:
             self.bottom = 592
         elif self.player.rect.right >= 749 and self.player.rect.bottom > 543:
             self.player.rect.right = 749
@@ -312,11 +319,17 @@ class Level4:
             self.game.notification_start_time = pygame.time.get_ticks()
             self.game.notification_message = "Kunci telah didapatkan!"
 
+    def collision(self, enemy):
+        if self.player.rect.colliderect(enemy.rect):
+            self.bottom = 256
+
 class Level5:
     def __init__(self, game, player):
         self.image = 'Level/lv5.png'
         self.game = game
         self.player = player
+        self.game.enemy_moving7.rect.x = 936
+        self.game.enemy_moving8.rect.x = 1002
         self.has_silver_key = False
         self.has_key = False
         self.bottom = 587
@@ -348,7 +361,7 @@ class Level5:
         if self.player.rect.left <= 15:
             self.player.rect.left = 15
 
-        if self.player.rect.bottom >= 640:
+        if self.player.rect.bottom >= 649:
             self.bottom = 588
             self.player.rect.bottom = 587
             self.player.rect.x = 32
@@ -419,7 +432,12 @@ class Level5:
                 self.has_silver_key = True
                 self.game.notification_start_time = pygame.time.get_ticks()
                 self.game.notification_message = "Kunci silver telah didapatkan!"
-
+    
+    def collision(self, enemy):
+        if self.player.rect.colliderect(enemy.rect):
+            self.player.rect.bottom = 587
+            self.player.rect.x = 32
+    
 class Level5_5:
     def __init__(self, game, player):
         self.image = 'Level/lv5-5.png'
