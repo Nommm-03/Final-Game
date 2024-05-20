@@ -240,6 +240,7 @@ class Level4:
         self.image = 'Level/lv4.png'
         self.game = game
         self.player = player
+        self.initial_player_position = 651
         self.bottom = 256
         self.finished = False
         self.has_key = False
@@ -321,13 +322,19 @@ class Level4:
 
     def collision(self, enemy):
         if self.player.rect.colliderect(enemy.rect):
+            self.player.rect.x = self.initial_player_position
             self.bottom = 256
+            self.game.enemy_follow1.rect.x = 100
+            self.game.enemy_follow1.rect.y = 100
+            self.game.enemy_follow2.rect.x = 589
+            self.game.enemy_follow2.rect.y = 519
 
 class Level5:
     def __init__(self, game, player):
         self.image = 'Level/lv5.png'
         self.game = game
         self.player = player
+        self.initial_player_position_x = 32
         self.game.enemy_moving7.rect.x = 936
         self.game.enemy_moving8.rect.x = 1002
         self.has_silver_key = False
@@ -435,8 +442,14 @@ class Level5:
     
     def collision(self, enemy):
         if self.player.rect.colliderect(enemy.rect):
-            self.player.rect.bottom = 587
+            self.bottom = 589
             self.player.rect.x = 32
+            self.game.enemy_follow3.rect.x = 63
+            self.game.enemy_follow3.rect.y = 68
+            self.game.enemy_follow4.rect.x = 1126
+            self.game.enemy_follow4.rect.y = 77
+            self.game.enemy_follow5.rect.x = 1058
+            self.game.enemy_follow5.rect.y = 624
     
 class Level5_5:
     def __init__(self, game, player):
