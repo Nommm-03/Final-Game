@@ -30,9 +30,14 @@ class Game:
         self.end = LevelEnd(self, self.player)
         self.running = True
 
+        self.bg_music = pygame.mixer.music.load('Level/Factory.ogg')
+        pygame.mixer.music.play(-1)
+        
         self.opening_quiz_sound = pygame.mixer.Sound('Sound Effect/Page Turning Sfx.wav')
         self.wrong_sound = pygame.mixer.Sound('Sound Effect/wrong_sound_effect.mp3')
+        self.wrong_sound.set_volume(0.2)
         self.correct_sound = pygame.mixer.Sound('Sound Effect/correct_sound_effect.mp3')
+        self.correct_sound.set_volume(0.2)
         self.open_sound = pygame.mixer.Sound('Sound Effect/qubodup-DoorOpen01.flac')
         self.notification_sound = pygame.mixer.Sound('Sound Effect/Tolling Bell-Bright.mp3')
         self.notification_start_time = None
@@ -43,7 +48,9 @@ class Game:
         self.npc1 = NPC((680, 530), "Selamat datang di Enigmatic Journey, Tujuan utamamu disini adalah untuk menemukan kunci di setiap levelnya. untuk level pertama, kamu akan diberi petunjuk-petunjuk yang akan kamu butuhkan untuk keluar dari mansion ini.")
         self.npc2 = NPC((236, 470), "Di dalam mansion ini, kamu akan menemui banyak rintangan seperti puzzle, kuis, dan mosnter. Lewati semua rintangan itu untuk lanjut ke ruangan selanjutnya!")
         self.npc3 = NPC((603,470), "Jika kamu sudah memiliki kunci emas, kamu bisa memasuki pintu untuk menuju ruangan selanjutnya.")
-
+        self.npc4 = NPC((120,215), "")
+        self.npc5 = NPC((1108, 212), "Terkadang kamu harus berani mati untuk mencapai tujuanmu.")
+        
     def show_notification(self, message, duration=2000):
         if self.notification_start_time is None:
             return
@@ -139,9 +146,39 @@ class Game:
                             self.notification_start_time = pygame.time.get_ticks()
                             self.notification_message = "Butuh Kunci!"
                             self.notification_sound.play()
+                        if event.key == pygame.K_RETURN and (175 <= self.player.rect.right < 297):
+                            self.level3.puzzle()
+                        if self.level3.show_puzzle:
+                            if not self.sound_played:
+                                self.opening_quiz_sound.play()
+                                self.sound_played = True
+                            if event.key == pygame.K_ESCAPE:
+                                self.opening_quiz_sound.play()
+                                self.level3.show_puzzle = False
+                                self.sound_played = False
+                            elif event.key == pygame.K_1:
+                                self.wrong_sound.play()
+                                self.notification_start_time = pygame.time.get_ticks()
+                                self.notification_message = "Jawaban Salah!"
+                            elif event.key == pygame.K_2:
+                                self.wrong_sound.play()
+                                self.notification_start_time = pygame.time.get_ticks()
+                                self.notification_message = "Jawaban Salah!"
+                            elif event.key == pygame.K_3:
+                                self.opening_quiz_sound.play()
+                                self.correct_sound.play()
+                                self.notification_start_time = pygame.time.get_ticks()
+                                self.notification_message = "Jawaban Benar! Kunci telah didrop."
+                                self.level3.solved = True
+                                self.level3.show_puzzle = False
+                                self.sound_played = False
                     elif self.level == '4':
+                        if event.key == pygame.K_RETURN and self.player.rect.right >= 1162:
+                            self.npc5.toggle_dialog()
+                            self.opening_quiz_sound.play()
                         if event.key == pygame.K_RETURN and (self.player.rect.right >= 239 and self.player.rect.left <= 425) and self.level4.has_key:
                             self.has_notified = False
+                            self.open_sound.play()
                             self.level4.finished = True
                         if event.key == pygame.K_RETURN and (self.player.rect.right >= 239 and self.player.rect.left <= 425)and not self.level4.has_key:
                             self.notification_start_time = pygame.time.get_ticks()
@@ -270,7 +307,11 @@ class Game:
                 game_background = pygame.image.load(self.level3.image).convert_alpha()
                 self.screen.blit(game_background, (0, 0))
                 self.level3.restrict()
-                self.level3.draw_key()
+                self.npc4.draw(self.screen)
+                if self.level3.show_puzzle and not self.level3.solved:
+                    self.level3.draw_puzzle()
+                if self.level3.solved:
+                    self.level3.draw_key()
 
             if self.level == '4' and not self.level4.finished:
                 if not self.has_notified:
@@ -282,6 +323,7 @@ class Game:
                 self.level4.restrict()
                 self.level4.draw_key()
                 self.screen.blit(game_background, (0, 0))
+                self.npc5.draw(self.screen)
             
             if self.level == '5' and not self.level5.finished:
                 if not self.has_notified:
