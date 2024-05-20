@@ -1,8 +1,10 @@
 import pygame
 from Player import *
 from Level import *
-from config import *
 from npc import *
+from config import *
+from Enemy_Moving import *
+from Enemy_Follow import *
 import sys
 
 class Game:
@@ -16,9 +18,33 @@ class Game:
         self.background = pygame.Surface((WIN_WIDTH,WIN_HEIGHT))
         self.background.fill(BLACK)
         self.level = '1'
+
         self.player = Player(self, 1, 19)
         self.bottom = 0
         
+        # Monster Level 1
+        self.enemy_moving1 = Enemy(self, 7, 1, 60, -1, 'Enemy/Monster1.png',size=(100, 100))
+        self.enemy_moving2 = Enemy(self, 7, 1, 60, -1, 'Enemy/Monster1.png', size=(100, 100))
+
+        # Monster Level 2
+        self.enemy_moving3 = Enemy(self, 18, 1, 15, -1, 'Enemy/Monster2.png', size=(100, 100))
+
+        # Monster Level 3
+        self.enemy_moving4 = Enemy(self, 14, 1, 8, 1, 'Enemy/Monster2.png', size=(100, 100))
+        self.enemy_moving5 = Enemy(self, 14, 1, 10, -1, 'Enemy/Monster2.png', size=(100, 100))
+
+        # Monster Level 4
+        self.enemy_moving6 = Enemy(self, 14, 1, 13, -1, 'Enemy/Monster2.png', size=(100, 100))
+        self.enemy_follow1 = Ghost(self, 100, 100, self.player, 4, 'Enemy/Ghost1.png')
+        self.enemy_follow2 = Ghost(self, 589, 519, self.player, 3, 'Enemy/Ghost2.png')
+
+        # Monster Level 5
+        self.enemy_moving7 = Enemy(self, 6, 1, 25, 1, 'Enemy/Monster1.png', size=(100, 100))
+        self.enemy_moving8 = Enemy(self, 14, 1, 13, 1, 'Enemy/Monster2.png', size=(100, 100))
+        self.enemy_follow3 = Ghost(self, 63, 68, self.player, 2, 'Enemy/Ghost1.png')
+        self.enemy_follow4 = Ghost(self, 1126, 77, self.player, 3, 'Enemy/Ghost1.png')
+        self.enemy_follow5 = Ghost(self, 1058, 624, self.player, 4, 'Enemy/Ghost2.png')
+
         self.level1 = Level1(self, self.player)
         self.level1_1 = Level1_1(self, self.player)
         self.level1_1_1 = Level1_1_1(self, self.player)
@@ -32,25 +58,23 @@ class Game:
 
         self.bg_music = pygame.mixer.music.load('Level/Factory.ogg')
         pygame.mixer.music.play(-1)
-        
+
         self.opening_quiz_sound = pygame.mixer.Sound('Sound Effect/Page Turning Sfx.wav')
         self.wrong_sound = pygame.mixer.Sound('Sound Effect/wrong_sound_effect.mp3')
-        self.wrong_sound.set_volume(0.2)
         self.correct_sound = pygame.mixer.Sound('Sound Effect/correct_sound_effect.mp3')
-        self.correct_sound.set_volume(0.2)
         self.open_sound = pygame.mixer.Sound('Sound Effect/qubodup-DoorOpen01.flac')
         self.notification_sound = pygame.mixer.Sound('Sound Effect/Tolling Bell-Bright.mp3')
         self.notification_start_time = None
         self.notification_message = ""
         self.has_notified = False
         self.sound_played = False
-        
+
         self.npc1 = NPC((680, 530), "Selamat datang di Enigmatic Journey, Tujuan utamamu disini adalah untuk menemukan kunci di setiap levelnya. untuk level pertama, kamu akan diberi petunjuk-petunjuk yang akan kamu butuhkan untuk keluar dari mansion ini.")
-        self.npc2 = NPC((236, 470), "Di dalam mansion ini, kamu akan menemui banyak rintangan seperti puzzle, kuis, dan mosnter. Lewati semua rintangan itu untuk lanjut ke ruangan selanjutnya!")
+        self.npc2 = NPC((236, 470), "Di dalam mansion ini, kamu akan menemui banyak rintangan seperti puzzle, kuis, dan monster. Lewati semua rintangan itu untuk lanjut ke ruangan selanjutnya!")
         self.npc3 = NPC((603,470), "Jika kamu sudah memiliki kunci emas, kamu bisa memasuki pintu untuk menuju ruangan selanjutnya.")
         self.npc4 = NPC((120,215), "")
         self.npc5 = NPC((1108, 212), "Terkadang kamu harus berani mati untuk mencapai tujuanmu.")
-        
+
     def show_notification(self, message, duration=2000):
         if self.notification_start_time is None:
             return
@@ -269,7 +293,15 @@ class Game:
                 self.bottom = self.level1_1.bottom
                 game_background = pygame.image.load(self.level1_1.image).convert_alpha()
                 self.screen.blit(game_background, (0, 0))
+                self.enemy_moving1.rect.bottom = 665
+                self.enemy_moving2.rect.bottom = 665
+                self.enemy_moving1.update()
+                self.enemy_moving1.draw(self.screen)
+                self.enemy_moving2.update()
+                self.enemy_moving2.draw(self.screen)
                 self.level1_1.restrict()
+                self.level1_1.collision(self.enemy_moving1)
+                self.level1_1.collision(self.enemy_moving2)
                 self.npc2.draw(self.screen)
 
             if self.level == '1-1-1' and not self.level1_1_1.finished:
@@ -292,6 +324,10 @@ class Game:
                 self.bottom = self.level2.bottom
                 game_background = pygame.image.load(self.level2.image).convert_alpha()
                 self.screen.blit(game_background, (0, 0))
+                self.enemy_moving3.rect.bottom = 665
+                self.enemy_moving3.update()
+                self.enemy_moving3.draw(self.screen)
+                self.level2.collision(self.enemy_moving3)
                 self.level2.restrict()
                 if self.level2.show_puzzle and not self.level2.solved:
                     self.level2.draw_puzzle()
@@ -306,6 +342,14 @@ class Game:
                 self.bottom = self.level3.bottom
                 game_background = pygame.image.load(self.level3.image).convert_alpha()
                 self.screen.blit(game_background, (0, 0))
+                self.enemy_moving4.rect.bottom = 343
+                self.enemy_moving4.update()
+                self.enemy_moving4.draw(self.screen)
+                self.enemy_moving5.rect.bottom = 343
+                self.enemy_moving5.update()
+                self.enemy_moving5.draw(self.screen)
+                self.level3.collision(self.enemy_moving4)
+                self.level3.collision(self.enemy_moving5)
                 self.level3.restrict()
                 self.npc4.draw(self.screen)
                 if self.level3.show_puzzle and not self.level3.solved:
@@ -323,8 +367,18 @@ class Game:
                 self.level4.restrict()
                 self.level4.draw_key()
                 self.screen.blit(game_background, (0, 0))
+                self.enemy_moving6.rect.bottom = 590
+                self.enemy_moving6.update()
+                self.enemy_moving6.draw(self.screen)
+                self.enemy_follow1.update()
+                self.enemy_follow1.draw(self.screen)
+                self.enemy_follow2.update()
+                self.enemy_follow2.draw(self.screen)
+                self.level4.collision(self.enemy_moving6)
+                self.level4.collision(self.enemy_follow1)
+                self.level4.collision(self.enemy_follow2)
                 self.npc5.draw(self.screen)
-            
+
             if self.level == '5' and not self.level5.finished:
                 if not self.has_notified:
                     self.notification_start_time = pygame.time.get_ticks()
@@ -334,6 +388,26 @@ class Game:
                 game_background = pygame.image.load(self.level5.image).convert_alpha()
                 self.screen.blit(game_background, (0, 0))
                 self.level5.restrict()
+
+                if not (self.level5.show_puzzle_1 or self.level5.show_puzzle_2):
+                    self.enemy_moving7.rect.bottom = 405
+                    self.enemy_moving7.update()
+                    self.enemy_moving7.draw(self.screen)
+                    self.enemy_moving8.rect.bottom = 405
+                    self.enemy_moving8.update()
+                    self.enemy_moving8.draw(self.screen)
+                    self.enemy_follow3.update()
+                    self.enemy_follow3.draw(self.screen)
+                    self.enemy_follow4.update()
+                    self.enemy_follow4.draw(self.screen)
+                    self.enemy_follow5.update()
+                    self.enemy_follow5.draw(self.screen)
+                    self.level5.collision(self.enemy_moving7)
+                    self.level5.collision(self.enemy_moving8)
+                    self.level5.collision(self.enemy_follow3)
+                    self.level5.collision(self.enemy_follow4)
+                    self.level5.collision(self.enemy_follow5)
+                
                 if self.level5.show_puzzle_1 and not self.level5.quiz1_solved:
                     self.level5.draw_puzzle(self.level5.question_1, self.level5.options_1)
                 if self.level5.show_puzzle_2 and not self.level5.quiz2_solved:
