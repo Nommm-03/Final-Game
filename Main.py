@@ -148,7 +148,7 @@ class Game:
                             self.notification_message = "Butuh Kunci!"
                             self.notification_sound.play()
                     elif self.level == '5':
-                         if event.key == pygame.K_RETURN and (self.player.rect.right >= 1013 and self.player.rect.left <= 1168 and self.player.rect.bottom >= 405) and self.level5.has_key:
+                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 1013 and self.player.rect.left <= 1168 and self.player.rect.bottom >= 405) and self.level5.has_key:
                             self.level5.finished = True
                             self.open_sound.play()
                             self.has_notified = False
