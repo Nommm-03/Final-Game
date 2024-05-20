@@ -12,7 +12,8 @@ Library : - Pygame
 Lewat Python Compiler
 
 # UML
-![UML CLASS DIAGRAM (2)](https://github.com/Nommm-03/Tugas-Besar-PBO/assets/167625310/4cfc8307-44c4-492d-9a76-ec691698c941)
+![UML CLASS DIAGRAM (1) (1)](https://github.com/Nommm-03/Tugas-Besar-PBO/assets/167625310/6cda1905-05fa-42b1-baf5-3791ec5b8af5)
+
 
 
 # Kontributor
