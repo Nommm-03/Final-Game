@@ -200,7 +200,7 @@ class Game:
                         if event.key == pygame.K_RETURN and self.player.rect.right >= 1162:
                             self.npc5.toggle_dialog()
                             self.opening_quiz_sound.play()
-                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 239 and self.player.rect.left <= 425) and self.level4.has_key:
+                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 232 and self.player.rect.left <= 440) and self.level4.has_key:
                             self.has_notified = False
                             self.open_sound.play()
                             self.level4.finished = True
@@ -433,6 +433,10 @@ class Game:
                 self.bottom = self.end.bottom
                 game_background = pygame.image.load(self.end.image).convert_alpha()
                 self.screen.blit(game_background, (0, 0))
+                title3 = self.title_font.render('THANK YOU', True, WHITE)
+                title3_rect = title3.get_rect(x=480,y=150)
+                self.screen.blit(title3, title3_rect)
+
                 self.end.restrict()
 
             if self.notification_start_time:
@@ -470,7 +474,7 @@ class Game:
         self.intro = True
         self.bottom = 665
         title1 = self.title_font.render('Enigmatic Escape', True, WHITE)
-        title1_rect = title1.get_rect(x=420,y=60)
+        title1_rect = title1.get_rect(x=390,y=60)
         title2 = self.title_font.render('Jaxon Journey', True, WHITE)
         title2_rect = title2.get_rect(x=415,y=115)
         intro_background = pygame.image.load('Level/start.png').convert_alpha()
