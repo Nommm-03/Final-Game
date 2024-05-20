@@ -12,13 +12,14 @@ class Player:
         self.height = TILESIZE
 
         self.x_change = 0
-        self.gravity = 0
+        self.gravity = 1
+        self.init_gravity = 1
 
         self.images = {
-            'idle': pygame.image.load('Chara/chara1.png'),
+            'idle': pygame.image.load('Chara/chara1.png').convert_alpha(),
             'walk': [
-                pygame.image.load('Chara/chara2.png'),
-                pygame.image.load('Chara/chara3.png')
+                pygame.image.load('Chara/chara2.png').convert_alpha(),
+                pygame.image.load('Chara/chara3.png').convert_alpha()
             ]
         }
         self.image = self.images['idle']
@@ -55,7 +56,7 @@ class Player:
 
         if keys[pygame.K_SPACE] and self.rect.bottom >= bottom:
             self.jump_sound.play()
-            self.gravity -= 15
+            self.gravity -= 20
 
     def animate(self, animation_type, current_time):
         if current_time - self.last_update > self.animation_time:
