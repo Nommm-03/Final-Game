@@ -16,10 +16,10 @@ class Player():
         self.gravity = 0
 
         self.images = {
-            'idle': pygame.image.load('chara1.png'),
+            'idle': pygame.image.load('Player/chara1.png'),
             'walk': [
-                pygame.image.load('chara2.png'),
-                pygame.image.load('chara3.png')
+                pygame.image.load('Player/chara2.png'),
+                pygame.image.load('Player/chara3.png')
             ]
         }
         self.image = self.images['idle']
