@@ -42,7 +42,7 @@ class NPC:
         lines.append(current_line)
         return lines
 
-    def toggle_dialog(self):
+  def toggle_dialog(self):
         self.showing_dialog = not self.showing_dialog
 
     
