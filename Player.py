@@ -1,7 +1,5 @@
 import pygame
 from config import *
-import math
-import random
 
 class Player():
     def _init_(self, game, x, y):
@@ -51,11 +49,9 @@ class Player():
 
         if keys[pygame.K_a]:
             self.x_change -= PLAYER_SPEED
-            self.facing = 'left'
             self.animate('walk', current_time)
         elif keys[pygame.K_d]:
             self.x_change += PLAYER_SPEED
-            self.facing = 'right'
             self.animate('walk', current_time)
         else:
             self.image = self.images['idle']
