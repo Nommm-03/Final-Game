@@ -154,7 +154,16 @@ class Level3:
         self.finished = False
         self.has_key = False
         self.key = Key((300, 400))
+        self.solved = False
+        self.show_puzzle = False
+        self.question = "5+4=920; 9+7=1663; maka 6+3="
+        self.options = ["1. 1026", "2. 4210", "3. 918"]
+        self.puzzle_bg_image = pygame.image.load('Level/brown_age_by_darkwood67.jpg').convert()
 
+    def puzzle(self):
+        if 175 <= self.player.rect.right < 297:
+            self.show_puzzle = True
+            
     def restrict(self):
         # Batasan Tepi
         if self.player.rect.bottom >= self.bottom:
@@ -164,9 +173,9 @@ class Level3:
         if self.player.rect.left <= 0:
             self.player.rect.left = 0
         # Left Side
-        if self.player.rect.left < 272:
+        if self.player.rect.left < 252:
             self.bottom = 405
-        elif self.player.rect.left >= 272 and self.player.rect.left < 356:
+        elif self.player.rect.left >= 252 and self.player.rect.left < 336:
             self.bottom = 445
         elif self.player.rect.left >= 356 and self.player.rect.right < 458:
             self.bottom = 483
@@ -193,6 +202,25 @@ class Level3:
         if self.player.rect.top <= 375 and self.player.rect.left >= 791 and self.player.rect.left <= 802:
             self.player.rect.top = 375
             
+    def draw_puzzle(self):
+        puzzle_width = 400
+        puzzle_height = 300
+        puzzle_surface = pygame.Surface((puzzle_width, puzzle_height))
+        bg_image_resized = pygame.transform.scale(self.puzzle_bg_image, (puzzle_width, puzzle_height))
+        puzzle_surface.blit(bg_image_resized, (0, 0))
+        question_text = self.game.quiz_font.render(self.question, True, (255, 255, 255))
+        puzzle_surface.blit(question_text, (puzzle_width // 2 - question_text.get_width() // 2, 50))
+
+        for i, option in enumerate(self.options):
+            option_text = self.game.quiz_font.render(option, True, (255, 255, 255))
+            puzzle_surface.blit(option_text, (puzzle_width // 2 - option_text.get_width() // 2, 150 + i * 50))
+
+        # Posisi di tengah layar
+        screen_width, screen_height = self.game.screen.get_size()
+        pos_x = (screen_width - puzzle_width) // 2
+        pos_y = (screen_height - puzzle_height) // 2
+        self.game.screen.blit(puzzle_surface, (pos_x, pos_y))
+        
     def draw_key(self):
         self.key.draw(self.game.screen)
         self.key.collect(self.player.rect)
@@ -220,15 +248,15 @@ class Level4:
         if self.player.rect.left <= 0:
             self.player.rect.left = 0
 
-        if 528 <= self.player.rect.right <= 778 and self.player.rect.bottom <= 258:
+        if 528 <= self.player.rect.right <= 831 and self.player.rect.bottom <= 258:
             self.bottom = 258
-        elif 477 <= self.player.rect.left <= 669 and self.player.rect.bottom >= 270:
+        elif 477 <= self.player.rect.left <= 600 and self.player.rect.bottom >= 270:
             self.bottom = 708
         elif 219 <= self.player.rect.left <= 477:
             self.bottom = 592
         elif 0 < self.player.rect.left < 118:
             self.bottom = 480
-        elif 668 <= self.player.rect.right < 749:
+        elif 671 <= self.player.rect.right < 768:
             self.bottom = 592
         elif self.player.rect.right >= 749 and self.player.rect.bottom > 543:
             self.player.rect.right = 749
@@ -320,7 +348,7 @@ class Level5:
         if self.player.rect.left <= 15:
             self.player.rect.left = 15
 
-        if self.player.rect.bottom >= 649:
+        if self.player.rect.bottom >= 640:
             self.bottom = 588
             self.player.rect.bottom = 587
             self.player.rect.x = 32
