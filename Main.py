@@ -11,7 +11,7 @@ class Game:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((WIN_WIDTH,WIN_HEIGHT))
-        self.caption = pygame.display.set_caption('Enigma Escape')
+        self.caption = pygame.display.set_caption('Enigma Escape : Jaxon's Journey')
         self.clock = pygame.time.Clock()
         self.title_font = pygame.font.Font('Font/joystix monospace.otf', 40)
         self.quiz_font = pygame.font.Font('Font/joystix monospace.otf', 15)
