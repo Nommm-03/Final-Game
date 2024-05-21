@@ -19,7 +19,7 @@ class Game:
         self.background.fill(BLACK)
         self.level = '1'
 
-        self.player = Player(self, 1, 19)
+        self.player = Player(self)
         self.bottom = 0
         
         # Monster Level 1
