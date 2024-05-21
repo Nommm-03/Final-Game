@@ -209,11 +209,11 @@ class Game:
                             self.notification_message = "Butuh Kunci!"
                             self.notification_sound.play()
                     elif self.level == '5':
-                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 1013 and self.player.rect.left <= 1168 and self.player.rect.bottom >= 405) and self.level5.has_key:
+                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 981 and self.player.rect.left <= 1168 and self.player.rect.bottom >= 140) and self.level5.has_key:
                             self.level5.finished = True
                             self.open_sound.play()
                             self.has_notified = False
-                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 1013 and self.player.rect.left <= 1168 and self.player.rect.bottom >= 405) and not self.level5.has_key:
+                        if event.key == pygame.K_RETURN and (self.player.rect.right >= 981 and self.player.rect.left <= 1168 and self.player.rect.bottom >= 140) and not self.level5.has_key:
                             self.notification_start_time = pygame.time.get_ticks()
                             self.notification_message = "Butuh Kunci!"
                             self.notification_sound.play()
@@ -327,8 +327,8 @@ class Game:
                 self.enemy_moving3.rect.bottom = 665
                 self.enemy_moving3.update()
                 self.enemy_moving3.draw(self.screen)
-                self.level2.collision(self.enemy_moving3)
                 self.level2.restrict()
+                self.level2.collision(self.enemy_moving3)
                 if self.level2.show_puzzle and not self.level2.solved:
                     self.level2.draw_puzzle()
                 if self.level2.solved:
