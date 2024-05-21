@@ -2,7 +2,7 @@ import pygame
 from config import *
 
 class Player:
-    def __init__(self, game, x, y):
+    def __init__(self, game):
 
         self.game = game
 
@@ -12,8 +12,8 @@ class Player:
         self.height = TILESIZE
 
         self.x_change = 0
-        self.gravity = 1
-        self.init_gravity = 1
+        self.gravity = 0
+        self.init_gravity = 0
 
         self.images = {
             'idle': pygame.image.load('Chara/chara1.png').convert_alpha(),
@@ -38,6 +38,8 @@ class Player:
 
         self.gravity += 1
         self.rect.y += self.gravity
+        if self.rect.bottom >= bottom:
+            self.gravity = self.init_gravity
 
         self.x_change = 0
 
@@ -56,7 +58,7 @@ class Player:
 
         if keys[pygame.K_SPACE] and self.rect.bottom >= bottom:
             self.jump_sound.play()
-            self.gravity -= 18
+            self.gravity -= 13
 
     def animate(self, animation_type, current_time):
         if current_time - self.last_update > self.animation_time:
