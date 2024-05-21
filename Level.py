@@ -71,7 +71,7 @@ class Level1_1:
         if self.player.rect.right >= 1250:
             self.finished = True
             self.game.has_notified = False
-            self.player.rect.left = 0
+            self.player.rect.left = 30
         if self.player.rect.left <= 0:
             self.game.level = '1'
             self.game.level1.finished = False
@@ -96,7 +96,9 @@ class Level1_1_1:
         if self.player.rect.right >= 1250:
             self.player.rect.right = 1250
         if self.player.rect.left <= 0:
-            self.player.rect.left = 0
+            self.game.level = '1-1'
+            self.game.level1_1.finished = False
+            self.player.rect.right = 1140
 
 class Level2:
     def __init__(self, game, player):
