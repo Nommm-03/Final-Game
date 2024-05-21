@@ -11,7 +11,15 @@ Library :
 - Math
           
 # Cara menjalankan App
-Lewat Python Compiler
+1. Install Seluruh File Kode beserta Assets menggunakan ZIP
+2. Buka Python Compiler
+3. Didalam Python Compiler, Buka Folder / ZIP yang telah didownload
+4. Jalankan main.py
+
+# Controls
+1. W,A,S,D = Movement
+2. Spacebar = Jump
+3. Enter = Interact with Objects
 
 # UML
 ![UML CLASS DIAGRAM (1) (1)](https://github.com/Nommm-03/Tugas-Besar-PBO/assets/167625310/6cda1905-05fa-42b1-baf5-3791ec5b8af5)
