@@ -56,7 +56,7 @@ class Player:
 
         if keys[pygame.K_SPACE] and self.rect.bottom >= bottom:
             self.jump_sound.play()
-            self.gravity -= 20
+            self.gravity -= 18
 
     def animate(self, animation_type, current_time):
         if current_time - self.last_update > self.animation_time:
